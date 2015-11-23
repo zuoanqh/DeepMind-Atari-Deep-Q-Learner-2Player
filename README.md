@@ -73,7 +73,16 @@ To run testing with different seeds (by default 10), for all epochs (default 49)
 
     ./test_gpu2_versions <game name> [<maxepoch>] [<maxseed>]
     
-All these scripts write file `dqn/<game name>.csv`, that contains game statistics for plotting. **NB!** All scripts append to this file, so after several runs you might want to delete irrelevant lines.
+All these scripts write file `dqn/<game name>.csv`, that contains following game statistics:
+ * *Epoch* - epoch number,
+ * *Seed* - seed used for this run,
+ * *WallBounces* - total number of wall-bounces in this run,
+ * *SideBounce* - total number of padd-bounces in this run,
+ * *Points* - total number of points (lost balls) in this run,
+ * *ServingTime* - total serving time int this run,
+ * *RewardA* - total reward of player A,
+ * *RewardB* - total reward of player B.
+**NB!** All scripts append to this file, so after several runs you might want to delete irrelevant lines.
 
 To run all experiments at once:
 
@@ -96,7 +105,14 @@ To extract training statistics to file:
 
     ./extract_data <game name> [<epoch>]
 
-This produces files `dqn/<game name>_history_A.csv` and `dqn/<game name>_history_B.csv`.
+This produces files `dqn/<game name>_history_A.csv` and `dqn/<game name>_history_B.csv`. These files contain following columns:
+ * *Epoch* - epoch number, starting from 0,
+ * *Average reward* - average reward per game during testing,
+ * *Reward count* - total count of non-zero rewards during testing,
+ * *Episode count* - number of games played during testing,
+ * *MeanQ* - average W-value of validation set,
+ * *TD Error* - temporal difference error,
+ * *Seconds* - seconds since start.
 
 Plotting game statistics
 ------------------------
