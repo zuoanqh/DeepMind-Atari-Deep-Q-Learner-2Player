@@ -34,9 +34,9 @@ Note: The above install script will install the following packages via apt-get:
 build-essential, gcc, g++, cmake, curl, libreadline-dev, git-core, libjpeg-dev,
 libpng-dev, ncurses-dev, imagemagick, unzip, libqt4-dev.
 
-In addition following Lua components are installed: luajit-rocks, cwrap, paths,
-torch, nn, cutorch, cunn, luafilesystem, penlight, sys, xlua, image, env, qtlua,
-qttorch, nngraph, lua-gd. 
+In addition following Lua components are installed to 'torch' subdirectory: 
+luajit-rocks, cwrap, paths, torch, nn, cutorch, cunn, luafilesystem, penlight, sys, 
+xlua, image, env, qtlua, qttorch, nngraph, lua-gd. 
 
 Training
 --------
@@ -56,38 +56,39 @@ Following games are supported:
  * `Pong2Player075p` - transition (\rho = 0.75)
  * `Pong2PlayerVS` - competitive game (\rho = 1)
 
-During training the snapshots of networks of both agents are written to `dqn/` folder. These are named `DQN_0_1_<game name>_FULL_Y_A_<epoch>.t7` and `DQN_0_1_<game name>_FULL_Y_B_<epoch>.t7`. One epoch is defined as 250,000 steps and they are numbered starting from 0. **NB!** One epoch snapshot takes about 1GB, therefore for 50 epochs reserve 50GB free space.
+During training the snapshots of networks of both agents are written to `dqn/` folder. These are named `DQN3_0_1_<game name>_FULL_Y_A_<epoch>.t7` and `DQN3_0_1_<game name>_FULL_Y_B_<epoch>.t7`. One epoch is defined as 250,000 steps and they are numbered starting from 0. **NB!** One epoch snapshot takes about 1GB, therefore for 50 epochs reserve 50GB free space.
 
 Testing
 -------
 
 To run testing for one episode:
 
-    ./test_gpu2 <game name> [<epoch>] [<seed>]
+    ./test_gpu2 <game name> <epoch>
     
 To run testing with different seeds (by default 10):
 
-    ./test_gpu2_seeds <game name> [<epoch>] [<maxseed>]
+    ./test_gpu2_seeds <game name> <epoch>
 
 To run testing with different seeds (by default 10), for all epochs (default 49):
 
-    ./test_gpu2_versions <game name> [<maxepoch>] [<maxseed>]
+    ./test_gpu2_versions <game name>
+    
+To run all experiments at once:
+
+    ./test_schemes
     
 All these scripts write file `dqn/<game name>.csv`, that contains following game statistics:
  * *Epoch* - epoch number,
  * *Seed* - seed used for this run,
  * *WallBounces* - total number of wall-bounces in this run,
- * *SideBounce* - total number of padd-bounces in this run,
+ * *SideBounce* - total number of paddle-bounces in this run,
  * *Points* - total number of points (lost balls) in this run,
- * *ServingTime* - total serving time int this run,
+ * *ServingTime* - total serving time in this run,
  * *RewardA* - total reward of player A,
  * *RewardB* - total reward of player B.
+
 **NB!** All scripts append to this file, so after several runs you might want to delete irrelevant lines.
 
-To run all experiments at once:
-
-    ./test_schemes
-    
 Extracting training statistics
 ----------------------------
 
@@ -103,10 +104,10 @@ Following plots are shown for both agents:
 
 To extract training statistics to file:
 
-    ./extract_data <game name> [<epoch>]
+    ./extract_data <game name> <epoch>
 
 This produces files `dqn/<game name>_history_A.csv` and `dqn/<game name>_history_B.csv`. These files contain following columns:
- * *Epoch* - epoch number, starting from 0,
+ * *Epoch* - testing phase number, divide by 2 to get true epoch,
  * *Average reward* - average reward per game during testing,
  * *Reward count* - total count of non-zero rewards during testing,
  * *Episode count* - number of games played during testing,
@@ -117,8 +118,10 @@ This produces files `dqn/<game name>_history_A.csv` and `dqn/<game name>_history
 Plotting game statistics
 ------------------------
 
-Plotting scripts are in folder `plots`. All `.csv` files from `dqn/` folder should be moved there for plotting. **NB!** Be sure to clean up `<game name>.csv` files as explained above.
+Plotting scripts are in folder `plots`. All `.csv` files from `dqn/` folder should be moved there for plotting. 
 
  * `scatter.py` - plots for figure 7, uses `<game name>.csv` files,
  * `plot.py` - plots for figures 3 and 4, uses `Pong2Player.csv` and `Pong2PlayerVS.csv` files,
  * `plot_history.py` - plots for figure 8, uses `<game name>_history_A.csv` and `<game name>_history_B.csv` files.
+
+**NB!** Be sure to clean up `<game name>.csv` files as explained above.
