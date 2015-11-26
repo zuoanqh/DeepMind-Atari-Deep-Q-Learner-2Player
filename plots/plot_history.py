@@ -5,7 +5,9 @@ import matplotlib as mpl
 
 csv_files = [
   "Pong2PlayerVS", 
+  "Pong2Player075p",
   "Pong2Player05p",
+  "Pong2Player025p",
   "Pong2Player0",
   "Pong2Player025",
   "Pong2Player05",
