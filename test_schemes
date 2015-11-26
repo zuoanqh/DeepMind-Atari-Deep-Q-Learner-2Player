@@ -1,6 +1,9 @@
+./test_gpu2_versions Pong2PlayerVS 49
+./test_gpu2_seeds Pong2Player075p 49
+./test_gpu2_seeds Pong2Player05p 49
+./test_gpu2_seeds Pong2Player025p 49
 ./test_gpu2_seeds Pong2Player0 49
 ./test_gpu2_seeds Pong2Player05 49
 ./test_gpu2_seeds Pong2Player025 49
 ./test_gpu2_seeds Pong2Player075 49
-./test_gpu2_seeds Pong2Player 49
-./test_gpu2_seeds Pong2PlayerVS 49
+./test_gpu2_versions Pong2Player 49
