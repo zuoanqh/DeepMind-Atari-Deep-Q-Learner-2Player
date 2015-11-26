@@ -7,7 +7,9 @@ import matplotlib as mpl
 
 csv_files = [
   ("Pong2PlayerVS.csv", "Competitive $\\rho=1$"), 
+  ("Pong2Player075p.csv", "Transition $\\rho=0.75$"),
   ("Pong2Player05p.csv", "Transition $\\rho=0.5$"),
+  ("Pong2Player025p.csv", "Transition $\\rho=0.25$"),
   ("Pong2Player0.csv", "Transition $\\rho=0$"),
   ("Pong2Player025.csv", "Transition $\\rho=-0.25$"), 
   ("Pong2Player05.csv", "Transition $\\rho=-0.5$"), 
@@ -17,7 +19,9 @@ csv_files = [
 
 labels = [
   r'$\rho = 1$' + '\n(competitive)',
+  r'$0.75$',
   r'$0.5$',
+  r'$0.25$',
   r'$0$',
   r'$-0.25$',
   r'$-0.5$',

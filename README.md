@@ -1,36 +1,9 @@
-# DeepMind Atari Deep Q Learner
+# DeepMind Atari Deep Q Learner for 2 players
 
-This repository hosts the [original code](https://sites.google.com/a/deepmind.com/dqn/) published along with [the article](http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html) in Nature and my experiments with it.
+This repository hosts the code to reproduce the experiments in the article "Multiagent Cooperation and Competition with Deep
+Reinforcement Learning". It is based on DeepMind's [original code](https://sites.google.com/a/deepmind.com/dqn/), that was modified to support two players. **NB!** Currently only Pong game in two-player mode is supported, support for other games and one-player mode is untested.
 
-There are following tweaks to the original code:
- * uses `qtlua` and `image.display()` to show game screen while training,
- * `plot_results <game>` script to plot history recorded in model file,
- * `test_gpu <game>` and `test_cpu <game>` scripts to play one session and record screens in animated GIF. These also record actions, Q-values and rewards in CSV file. The aim of this script is to reproduce [Extended Data Figure 2](http://www.nature.com/nature/journal/v518/n7540/fig_tab/nature14236_SF2.html) from the article. **NB!** If you trained your model with `run_gpu`, you must use `test_gpu` to test it, otherwise deserialization of the model fails.
-
-Thanks to [kuz](https://github.com/kuz) for providing starting point for this. Tested on Ubuntu 14.10 with nVidia GTX 750:  
-![alt text](https://raw.githubusercontent.com/tambetm/DeepMind-Atari-Deep-Q-Learner/master/sessions/breakout.gif "Playing Breakout")
-
-Here is the original README:
-
-DQN 3.0
--------
-
-This project contains the source code of DQN 3.0, a Lua-based deep reinforcement
-learning architecture, necessary to reproduce the experiments
-described in the paper "Human-level control through deep reinforcement
-learning", Nature 518, 529–533 (26 February 2015) doi:10.1038/nature14236.
-
-To replicate the experiment results, a number of dependencies need to be
-installed, namely:
-* LuaJIT and Torch 7.0
-* nngraph
-* Xitari (fork of the Arcade Learning Environment (Bellemare et al., 2013))
-* AleWrap (a lua interface to Xitari)
-An install script for these dependencies is provided.
-
-Two run scripts are provided: run_cpu and run_gpu. As the names imply,
-the former trains the DQN network using regular CPUs, while the latter uses
-GPUs (CUDA), which typically results in a significant speed-up.
+Gameplay videos can be found here: https://www.youtube.com/playlist?list=PLfLv_F3r0TwyaZPe50OOUx8tRf0HwdR_u
 
 Installation instructions
 -------------------------
@@ -44,12 +17,11 @@ This can be downloaded from https://developer.nvidia.com/cuda-toolkit
 and installation instructions can be found in
 http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux
 
-
 To train DQN on Atari games, the following components must be installed:
 * LuaJIT and Torch 7.0
 * nngraph
-* Xitari
-* AleWrap
+* Xitari (fork of the Arcade Learning Environment (Bellemare et al., 2013))
+* AleWrap (a lua interface to Xitari)
 
 To install all of the above in a subdirectory called 'torch', it should be enough to run
 
@@ -60,31 +32,96 @@ from the base directory of the package.
 
 Note: The above install script will install the following packages via apt-get:
 build-essential, gcc, g++, cmake, curl, libreadline-dev, git-core, libjpeg-dev,
-libpng-dev, ncurses-dev, imagemagick, unzip
+libpng-dev, ncurses-dev, imagemagick, unzip, libqt4-dev.
 
-Training DQN on Atari games
----------------------------
+In addition following Lua components are installed to 'torch' subdirectory: 
+luajit-rocks, cwrap, paths, torch, nn, cutorch, cunn, luafilesystem, penlight, sys, 
+xlua, image, env, qtlua, qttorch, nngraph, lua-gd. 
 
-Prior to running DQN on a game, you should copy its ROM in the 'roms' subdirectory.
-It should then be sufficient to run the script
+Training
+--------
 
-    ./run_cpu <game name>
+To run training for a game:
 
-Or, if GPU support is enabled,
+    ./run_gpu2 <game name>
 
-    ./run_gpu <game name>
+Following games are supported:
+ * `Pong2Player` - cooperative game (\rho = -1)
+ * `Pong2Player075` - transition (\rho = -0.75)
+ * `Pong2Player05` - transition (\rho = -0.5)
+ * `Pong2Player025` - transition (\rho = -0.25)
+ * `Pong2Player0` - transition (\rho = 0)
+ * `Pong2Player025p` - transition (\rho = 0.25)
+ * `Pong2Player05p` - transition (\rho = 0.5)
+ * `Pong2Player075p` - transition (\rho = 0.75)
+ * `Pong2PlayerVS` - competitive game (\rho = 1)
 
+During training the snapshots of networks of both agents are written to `dqn/` folder. These are named `DQN3_0_1_<game name>_FULL_Y_A_<epoch>.t7` and `DQN3_0_1_<game name>_FULL_Y_B_<epoch>.t7`. One epoch is defined as 250,000 steps and they are numbered starting from 0. **NB!** One epoch snapshot takes about 1GB, therefore for 50 epochs reserve 50GB free space.
 
-Note: On a system with more than one GPU, DQN training can be launched on a
-specified GPU by setting the environment variable GPU_ID, e.g. by
-
-    GPU_ID=2 ./run_gpu <game name>
-
-If GPU_ID is not specified, the first available GPU (ID 0) will be used by default.
-
-Options
+Testing
 -------
 
-Options to DQN are set within run_cpu (respectively, run_gpu). You may,
-for example, want to change the frequency at which information is output 
-to stdout by setting 'prog_freq' to a different value.
+To run testing for one episode:
+
+    ./test_gpu2 <game name> <epoch>
+    
+To run testing with different seeds (by default 10):
+
+    ./test_gpu2_seeds <game name> <epoch>
+
+To run testing with different seeds (by default 10), for all epochs (default 49):
+
+    ./test_gpu2_versions <game name>
+    
+To run all experiments at once:
+
+    ./test_schemes
+    
+All these scripts write file `dqn/<game name>.csv`, that contains following game statistics:
+ * *Epoch* - epoch number,
+ * *Seed* - seed used for this run,
+ * *WallBounces* - total number of wall-bounces in this run,
+ * *SideBounce* - total number of paddle-bounces in this run,
+ * *Points* - total number of points (lost balls) in this run,
+ * *ServingTime* - total serving time in this run,
+ * *RewardA* - total reward of player A,
+ * *RewardB* - total reward of player B.
+
+**NB!** All scripts append to this file, so after several runs you might want to delete irrelevant lines.
+
+Extracting training statistics
+----------------------------
+
+To plot training history:
+
+    ./plot_2results <game name> [<epoch>]
+    
+Following plots are shown for both agents:
+ * average reward per game during testing,
+ * total count of non-zero rewards during testing,
+ * number of games played during testing,
+ * average Q-value of validation set.
+
+To extract training statistics to file:
+
+    ./extract_data <game name> <epoch>
+
+This produces files `dqn/<game name>_history_A.csv` and `dqn/<game name>_history_B.csv`. These files contain following columns:
+ * *Epoch* - testing phase number, divide by 2 to get true epoch,
+ * *Average reward* - average reward per game during testing,
+ * *Reward count* - total count of non-zero rewards during testing,
+ * *Episode count* - number of games played during testing,
+ * *MeanQ* - average W-value of validation set,
+ * *TD Error* - temporal difference error,
+ * *Seconds* - seconds since start.
+
+Plotting game statistics
+------------------------
+
+Plotting scripts are in folder `plots`. All `.csv` files from `dqn/` folder should be moved there for plotting. 
+
+ * `scatter.py` - plots for figure 7, uses `<game name>.csv` files,
+ * `plot.py` - plots for figures 3 and 4, uses `Pong2Player.csv` and `Pong2PlayerVS.csv` files,
+ * `plot_history.py` - plots for figure 8, uses `<game name>_history_A.csv` and `<game name>_history_B.csv` files.
+
+**NB!** Be sure to clean up `<game name>.csv` files as explained above.
