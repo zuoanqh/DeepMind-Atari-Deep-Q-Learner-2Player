@@ -1,3 +1,7 @@
+# 2PDQN for testing
+
+This repository is for testing a 2-player xitari/ale + alewrap that I am going to make that support more games as a first step to experimenting on different network structures in the 2 player domain, meow!
+
 # DeepMind Atari Deep Q Learner for 2 players
 
 This repository hosts the code to reproduce the experiments in the article "Multiagent Cooperation and Competition with Deep
