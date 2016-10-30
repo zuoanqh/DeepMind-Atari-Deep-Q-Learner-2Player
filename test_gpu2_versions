@@ -19,7 +19,7 @@ learn_start=0
 pool_frms_type="\"max\""
 pool_frms_size=2
 initial_priority="false"
-replay_memory=1000000
+replay_memory=100000
 eps_end=0.1
 eps_endt=replay_memory
 lr=0.00025
@@ -56,10 +56,9 @@ do
   gif_file="../sessions/${ENV}_$version.gif"
   csv_file="../sessions/${ENV}_$version.csv"
 
-    for seed in `seq $maxseed`
-    do
-      args="-framework $FRAMEWORK -game_path $game_path -name $agent_name -nameB $agent_nameB -env $ENV -env_params $env_params -agent $agent -agent_params $agent_params -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed $seed -threads $num_threads -verbose 1 -network $network_file -networkB $network_fileB -gif_file $gif_file -csv_file $csv_file -version $version -datas_file $datas_file"
+
+  args="-framework $FRAMEWORK -game_path $game_path -name $agent_name -nameB $agent_nameB -env $ENV -env_params $env_params -agent $agent -agent_params $agent_params -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed 1 -threads $num_threads -verbose 1 -network $network_file -networkB $network_fileB -gif_file $gif_file -csv_file $csv_file -version $version -datas_file $datas_file"
   ../torch/bin/qlua test_2agent.lua $args
-    done
+
 done
 

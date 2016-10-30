@@ -1,5 +1,3 @@
---//Marked for replacing pong specific code.
-
 --[[
 Copyright (c) 2014 Google Inc.
 
@@ -107,11 +105,11 @@ while not terminal do
     -- choose the best action
     local action_index = agent:perceive(rewardA, screen, terminal, true, 0.01)
     local action_indexB = agentB:perceive(rewardB, screen, terminal, true, 0.01)
-    --if agent.bestq == 0 then
-    --  print("A random action: " .. action_index)
-    --else
-    --  print("A agent action: " .. action_index)
-    --end
+    if agent.bestq == 0 then
+      print("A random action: " .. action_index)
+    else
+      print("A agent action: " .. action_index)
+    end
     -- play game in test mode (episodes don't end when losing a life)
     screen, rewardA,rewardB, terminal, sideBouncing,wallBouncing,points,crash,serving = game_env:step2(game_actions[action_index],game_actionsB[action_indexB], false)
     if crash then
@@ -158,11 +156,11 @@ while not terminal do
 
     -- write best Q-value for state to CSV file
     csv_file:write(action_index .. ';' ..action_indexB .. ';' .. agent.bestq .. ';' .. agentB.bestq .. ';' .. rewardA .. ';'.. rewardB .. ';' .. tostring(terminal) .. '\n')
-    --print(previousScore.." / "..points.." bounce ",totalSideBounce,":"..totalWallBounce)
+    print(previousScore.." / "..points.." bounce ",totalSideBounce,":"..totalWallBounce)
     
 end
-print("final "..previousScore.." / "..points.." bounce ",totalSideBounce,":"..totalWallBounce)
-datas_file:write(""..version..";"..opt.seed..";"..totalWallBounce..";"..totalSideBounce..";"..points..";"..servingTime..";"..totalRewardA..";"..totalRewardB.."\n")
+print("final "..previousScore)
+datas_file:write(""..version..";"..opt.seed..";"..totalRewardA..";"..totalRewardB.."\n")
 
 datas_file:close()
 

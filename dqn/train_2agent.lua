@@ -87,7 +87,7 @@ local nrewardsB
 local episode_rewardB
 
 local screen, rewardA,rewardB, terminal = game_env:getState2()
-
+local displayscreen = true;
 
 local win = nil
 while step < opt.steps do
@@ -108,7 +108,9 @@ while step < opt.steps do
     end
 
     -- display screen
-    win = image.display({image=screen, win=win})
+    if displayscreen then
+        win = image.display({image=screen, win=win})
+    end
 
     if step % opt.prog_freq == 0 then
         assert(step==agent.numSteps, 'trainer step: ' .. step ..
