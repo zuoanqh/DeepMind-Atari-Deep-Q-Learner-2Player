@@ -87,7 +87,7 @@ local nrewardsB
 local episode_rewardB
 
 local screen, rewardA,rewardB, terminal = game_env:getState2()
-local displayscreen = true;
+local displayscreen = false;
 
 local win = nil
 while step < opt.steps do

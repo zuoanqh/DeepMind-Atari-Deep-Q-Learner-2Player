@@ -33,7 +33,7 @@ cmd:option('-networkB', '', 'reload pretrained network for agent 2')
 cmd:option('-agent', '', 'name of agent file to use')
 cmd:option('-agent_params', '', 'string of agent parameters')
 cmd:option('-seed', 3, 'fixed input seed for repeatable experiments')
-
+cmd:option('-epsilon', 0.05, 'epsilon for epsilon greedy')
 cmd:option('-verbose', 2,
            'the higher the level, the more information is printed to screen')
 cmd:option('-threads', 1, 'number of BLAS threads')
@@ -80,7 +80,11 @@ im:gifAnimAdd(gif_filename, false, 0, 0, 7, gd.DISPOSAL_NONE)
 
 -- remember the image and show it first
 local previm = im
-local win = image.display({image=screen})
+local displayscreen = false;
+local win 
+if displayscreen then
+    win = image.display({image=screen})
+end
 
 -- open CSV file for writing and write header
 local csv_file = assert(io.open(csv_filename, "w"))
@@ -103,8 +107,8 @@ while not terminal do
     agentB.bestq = 0
     
     -- choose the best action
-    local action_index = agent:perceive(rewardA, screen, terminal, true, 0.01)
-    local action_indexB = agentB:perceive(rewardB, screen, terminal, true, 0.01)
+    local action_index = agent:perceive(rewardA, screen, terminal, true, opt.epsilon)
+    local action_indexB = agentB:perceive(rewardB, screen, terminal, true, opt.epsilon)
     if agent.bestq == 0 then
       print("A random action: " .. action_index)
     else
@@ -139,7 +143,9 @@ while not terminal do
     
 
     -- display screen
-    image.display({image=screen, win=win})
+	if displayscreen then
+        image.display({image=screen, win=win})
+	end
 
     -- create gd image from tensor
     jpg = image.compressJPG(screen:squeeze(), 100)
@@ -167,7 +173,7 @@ datas_file:close()
 -- end GIF animation and close CSV file
 gd.gifAnimEnd(gif_filename)
 csv_file:close()
-
+print(totalRewardA .. " A:B " .. totalRewardB)
 print("Finished playing, close window to exit!")
 assert(false)
 
